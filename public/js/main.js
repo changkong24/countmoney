@@ -1,6 +1,6 @@
 (function(){
-	require(["Money"],funciton(Money){
-		var money = new Mondey("mainCanvas");
+	require(["Money"],function(Money){
+		var money = new Money("mainCanvas");
 		window.onload = money.init();//初始化数据
 	})
 })();
