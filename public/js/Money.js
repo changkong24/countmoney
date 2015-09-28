@@ -1,4 +1,4 @@
-define([],function(){
+define(["Game"],function(Game){
 	/**
 	 * 初始化 数钱相关的
 	 */
@@ -62,4 +62,5 @@ define([],function(){
 	function isTouchDevice(){
 		return ('ontouchstart' in document.documentElement);
 	}
+	return Money;
 })
