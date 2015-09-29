@@ -15,28 +15,49 @@ define(["Game"],function(Game){
 	 */
 	_p.init = function(){
 		var that = this;
-		var sx = 0,sy = 0;
+		var x,y;
+		var ifDrag = false;
 		if(isTouchDevice()){
 			this._canvas.addEventListener("touchstart",function(e){
-				alert(1);
+				var touch = event.targetTouches[0];
 				that._game.handleClick(touch.pageX,touch.pageY);
+				ifDrag = false;
+				e.stopPropagation();
+				e.preventDefault();
+			},false);
+			this._canvas.addEventListener("touchmove",function(e){
+				ifDrag = true;
+				e.stopPropagation();
+				e.preventDefault();
+			},false);
+			this._canvas.addEventListener("touchend",function(e){
+				if(ifDrag){
+					that._game.handle();
+				}
 				e.stopPropagation();
 				e.preventDefault();
 			},false);
 		}
 		else{
-			this._canvas.addEventListener("mousedown",function(e){
-				sx =  e.pageX - that._canvas.offsetLeft,sy = e.pageY;
+			this._canvas.addEventListener("mousedown",function (e){
+				ifDrag = false;
+				that._game.handleClick(e.pageX - that._canvas.offsetLeft,e.pageY);
 				e.stopPropagation();
 				e.preventDefault();
 			})
-			this._canvas.addEventListener("mouseup",function(e){
-				if(e.pageX != sx || e.pageY != sy){
-					that._game.handleClick(e.pageX,e.pageY);
+			this._canvas.addEventListener("mousemove", function (e) {
+	            ifDrag = true;
+	            e.stopPropagation();
+				e.preventDefault();
+	        })
+			this._canvas.addEventListener("mouseup",function (e){
+				if(ifDrag){
+					that._game.handle(e.pageX - that._canvas.offsetLeft,e.pageY);
 				}
 				e.stopPropagation();
 				e.preventDefault();
 			})
+
 		}
 	}
 	/**
@@ -67,7 +88,7 @@ define(["Game"],function(Game){
 	 * @return {Boolean} [description]
 	 */
 	function isTouchDevice(){
-		return ('touchmove' in document.documentElement);
+		return ('ontouchstart' in document.documentElement);
 	}
 	return Money;
 })

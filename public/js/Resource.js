@@ -11,7 +11,7 @@ define([],function(){
 	Resource.IMGPATH = "../images/"
 	Resource.IMAGES = [
 		{
-			name:"bg",
+			name:"tmbg",
 			src:"tmbg.png",
 		},{
 			name:"main",
@@ -51,7 +51,7 @@ define([],function(){
 			src:"starttip.png"
 		},{
 			name:"tmicon",
-			src:"tmicon.png"
+			src:"tmicon1.png"
 		}
 	]
 	Resource.SOUNDPATH = "../audio/";
