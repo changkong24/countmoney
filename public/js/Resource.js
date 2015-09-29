@@ -4,19 +4,6 @@ define([],function(){
 	 */
 	function Resource (){
 	}
-	_p = Resource.prototype;//原型
-
-	/**
-	 * 加载数据资源
-	 * @param  {[type]} src [description]
-	 * @return {[type]}     [description]
-	 */
-	_p.loadImages = function(i,src,callback){
-		var img = new Image();
-		img.src = src;
-		Resource.IMAGES[i].img = img;
-		img.onload = callback;
-	}
 	/**
 	 * 图片资源
 	 * @type {Object}
@@ -25,10 +12,10 @@ define([],function(){
 	Resource.IMAGES = [
 		{
 			name:"bg",
-			src:"tmbg.png"
+			src:"tmbg.png",
 		},{
 			name:"main",
-			src:"main.png"
+			src:"main.jpg"
 		},{
 			name:"d0",
 			src:"d0.png"
@@ -67,7 +54,17 @@ define([],function(){
 			src:"tmicon.png"
 		}
 	]
-	Resource.SOUNDPATH = "../Sound/";
-	Resource.SOUNDS = [];
+	Resource.SOUNDPATH = "../audio/";
+	Resource.SOUNDS = [{
+			name:"all",
+			src:"all.mp3"
+		},{
+			name:"coin",
+			src:"coin.mp3"
+		},{
+			name:"count",
+			src:"count.mp3"
+		}
+	];
 	return Resource;
 });

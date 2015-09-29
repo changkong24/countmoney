@@ -15,18 +15,25 @@ define(["Game"],function(Game){
 	 */
 	_p.init = function(){
 		var that = this;
+		var sx = 0,sy = 0;
 		if(isTouchDevice()){
 			this._canvas.addEventListener("touchstart",function(e){
-				var touch = event.targetTouches[0];
+				alert(1);
 				that._game.handleClick(touch.pageX,touch.pageY);
 				e.stopPropagation();
 				e.preventDefault();
 			},false);
 		}
 		else{
+			this._canvas.addEventListener("mousedown",function(e){
+				sx =  e.pageX - that._canvas.offsetLeft,sy = e.pageY;
+				e.stopPropagation();
+				e.preventDefault();
+			})
 			this._canvas.addEventListener("mouseup",function(e){
-				var x = e.pageX - that._canvas.offsetLeft;
-				that._game.handleClick(x,e.pageY);
+				if(e.pageX != sx || e.pageY != sy){
+					that._game.handleClick(e.pageX,e.pageY);
+				}
 				e.stopPropagation();
 				e.preventDefault();
 			})
@@ -52,7 +59,7 @@ define(["Game"],function(Game){
 	function resizeCanvas(canvas){
 		canvas.width = document.width || document.body.clientWidth;
 		canvas.height = document.height || document.body.clientHeight;
-		canvas.width = canvas.width > 760 ? 760 : canvas.width;
+		canvas.width = canvas.width > 768 ? 768 : canvas.width;
 		canvas.height = canvas.height > 1024 ? 1024 : canvas.height;
 	}
 	/**
@@ -60,7 +67,7 @@ define(["Game"],function(Game){
 	 * @return {Boolean} [description]
 	 */
 	function isTouchDevice(){
-		return ('ontouchstart' in document.documentElement);
+		return ('touchmove' in document.documentElement);
 	}
 	return Money;
 })
