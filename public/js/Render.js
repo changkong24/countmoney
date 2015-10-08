@@ -6,11 +6,10 @@ define(["Module"],function(Module){
 		this._width = 0;//画布宽度
 		this._height = 0;//画布高度
 		this._imgs = null;
-		this._audio = null;
 		this._imgInterval = null;//落下的定时器
 		this._upInterval = null;//数钱 背景 定时器
 		this._init();
-		this._top = 0;
+		this._top = 0;//向上移动的图 的位置
 	}
 	var _p = Render.prototype;//原型
 	/**
@@ -19,7 +18,6 @@ define(["Module"],function(Module){
 	 */
 	_p._init = function(){
 		this._imgs = this._module.getImgs();//图片数据
-		this._audio = this._module.getAudio();//声音数据
 	}
 	/**
 	 * 绘制加载中
@@ -82,6 +80,7 @@ define(["Module"],function(Module){
 	 */
 	_p.render_game_over = function(ctx){
 		var img = this._imgs.getList()["dlgbg"];
+		var txt = this._module.getText(),score = this._module.getScore();;
 		var scale = this._width / img.width;
 		ctx.save();
 		ctx.translate(0,(this._height - img.height * scale)/2);
@@ -89,14 +88,14 @@ define(["Module"],function(Module){
 		ctx.fillStyle = "#ffff00";
 		ctx.font = "bold 40px fontawesome";
 		ctx.textAlign = "center";
-		ctx.fillText("￥"+this._module.getScore(),this._width/2,img.height * scale * 0.25 * 0.4);//分数
-		ctx.fillText("贫农",this._width/2,img.height* scale  * 0.25 * 0.95);//等级
+		ctx.fillText("￥"+score,this._width/2,img.height * scale * 0.25 * 0.4);//分数
+		ctx.fillText(txt,this._width/2,img.height* scale  * 0.25 * 0.95);//等级
 		ctx.fillStyle = "#DA8F2C";
 		ctx.font="30px fontawesome";
 		ctx.textAlign = "center"
-		ctx.fillText("我数了"+this._module.getScore()+",",this._width/2,img.height * scale* 0.75 * 0.58);
-		ctx.fillText("比68%的人有钱,",this._width/2,img.height* scale * 0.75 * 0.73);
-		ctx.fillText("我是贫农",this._width/2,img.height* scale  * 0.75 * 0.88);
+		ctx.fillText("我数了"+score+",",this._width/2,img.height * scale* 0.75 * 0.58);
+		ctx.fillText("比"+ Math.floor(score / 43000 * 100)+"%的人有钱,",this._width/2,img.height* scale * 0.75 * 0.73);
+		ctx.fillText("我是"+txt,this._width/2,img.height* scale  * 0.75 * 0.88);
 		ctx.translate(0,img.height * scale * 0.75);
 		this.render_btns(ctx,img.height,scale,img.height * scale * 0.75 + (this._height - img.height * scale)/2);
 		ctx.restore();
@@ -142,15 +141,22 @@ define(["Module"],function(Module){
 			that.render_game_over(ctx);
 		}
 	}
+	/**
+	 * 向上滑动的图片
+	 * @param  {[type]} ctx [description]
+	 * @return {[type]}     [description]
+	 */
 	_p._render_up_money = function(ctx){
-		if(this._module.getIsShow()){
+		if(this._module.getIsShow() || this._module.getIsDown()){
 			var img = this._imgs.getList()["m0"];
 			var scale = this._width * 0.6 / img.width;
 			ctx.drawImage(img,0,0,img.width,img.height,(this._width - img.width * scale )/2,this._top ,img.width * scale,img.height * scale);
-			this._top  -= 120;
-			if(this._top  < -this._height * 0.36){
-				this._module.setIsShow(false);
-				this._top  = this._height * 0.36;
+			if(this._module.getIsShow()){
+				this._top  -= 120;
+				if(this._top  < -this._height * 0.36){
+					this._module.setIsShow(false);
+					this._top  = this._height * 0.36;
+				}
 			}
 		}
 	}
@@ -265,6 +271,13 @@ define(["Module"],function(Module){
 			rans[i].y += rans[i].vy;
 			ctx.restore();
 		}
+	}
+	/**
+	 * 移动的时候设置高度
+	 * @param {[type]} offsetTop [description]
+	 */
+	_p.setTop = function(offsetTop){
+		this._top = this._top - offsetTop > 0 ? this._top - offsetTop : 0;
 	}
 	/**
 	 * 清空图片定时器

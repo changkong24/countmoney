@@ -17,16 +17,24 @@ define(["Game"],function(Game){
 		var that = this;
 		var x,y;
 		var ifDrag = false;
+		var isDown = false;
 		if(isTouchDevice()){
 			this._canvas.addEventListener("touchstart",function(e){
 				var touch = event.targetTouches[0];
+				x = touch.pageX,y = touch.pageY;
 				that._game.handleClick(touch.pageX,touch.pageY);
 				ifDrag = false;
+				isDown = true;
 				e.stopPropagation();
 				e.preventDefault();
 			},false);
 			this._canvas.addEventListener("touchmove",function(e){
 				ifDrag = true;
+				if(isDown){
+					var touch = event.targetTouches[0];
+					that._game.handleMouseMove(y - touch.pageY);
+					y = touch.pageY;
+				}
 				e.stopPropagation();
 				e.preventDefault();
 			},false);
@@ -34,6 +42,10 @@ define(["Game"],function(Game){
 				if(ifDrag){
 					that._game.handle();
 				}
+				else{
+					that._game.handleMouseUp();//鼠标释放
+				}
+				isDown = false;
 				e.stopPropagation();
 				e.preventDefault();
 			},false);
@@ -41,12 +53,18 @@ define(["Game"],function(Game){
 		else{
 			this._canvas.addEventListener("mousedown",function (e){
 				ifDrag = false;
+				isDown = true;
+				y = e.pageY;
 				that._game.handleClick(e.pageX - that._canvas.offsetLeft,e.pageY);
 				e.stopPropagation();
 				e.preventDefault();
 			})
 			this._canvas.addEventListener("mousemove", function (e) {
 	            ifDrag = true;
+	            if(isDown){
+	            	that._game.handleMouseMove(y - e.pageY);
+	            	y = e.pageY;
+	            }
 	            e.stopPropagation();
 				e.preventDefault();
 	        })
@@ -54,6 +72,10 @@ define(["Game"],function(Game){
 				if(ifDrag){
 					that._game.handle(e.pageX - that._canvas.offsetLeft,e.pageY);
 				}
+				else{
+					that._game.handleMouseUp();//鼠标释放
+				}
+				isDown = false;
 				e.stopPropagation();
 				e.preventDefault();
 			})

@@ -53,6 +53,9 @@ define(["Resource"],function(Resource){
 		var len = sounds.length;
 		for(var i = 0;i<len;i++){
 			this._list[sounds[i].name] = new Buzz(path + sounds[i].src,sounds[i].autoplay,sounds[i].loop);
+			this._list[sounds[i].name].load(function(){
+				console.log(1)
+			});
 		}
 	}
 
@@ -77,18 +80,25 @@ define(["Resource"],function(Resource){
 		this._el = el;
 	}
 	/**
+	 * 加载
+	 * @return {[type]} [description]
+	 */
+	Buzz.prototype.load = function(callback){
+		this._el.load(callback);
+	}
+	/**
 	 * 播放
 	 * @return {[type]} [description]
 	 */
 	Buzz.prototype.play = function(){
-		this.el.play();
+		this._el.play();
 	}
 	/**
 	 * 暂停
 	 * @return {[type]} [description]
 	 */
 	Buzz.prototype.pause = function(){
-		this.el.pause();
+		this._el.pause();
 	}
 	return Audio;
 })

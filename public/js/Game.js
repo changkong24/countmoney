@@ -8,6 +8,7 @@ define(["Render","Module","util/Audio","util/Images","Resource"],function(Render
 		this._render = new Render(this._canvas,this._module);
 		this.resize();//初始化
 		this._loadResource();//加载数据
+		this._audio = this._module.getAudio();
 	}
 	var _p = Game.prototype;
 	/**
@@ -83,6 +84,7 @@ define(["Render","Module","util/Audio","util/Images","Resource"],function(Render
 	 * @return {[type]}   [description]
 	 */
 	_p.handleClick = function(x,y){
+		//播放音乐
 		var status = this._module.getStatus();
 		if(status == Module.GAMEOVER){
 			var rectShare = this._module.getShareRect();
@@ -96,18 +98,46 @@ define(["Render","Module","util/Audio","util/Images","Resource"],function(Render
 				this._share_click();
 			}
 		}
+		else if(status == Module.PLAYING){
+			this._module.setIsDown(true);// 按下后
+		}
+	}
+	/**
+	 * 鼠标释放
+	 * @return {[type]} [description]
+	 */
+	_p.handleMouseUp = function(){
+		this._module.setIsDown(false);//
+	}
+	/**
+	 * 鼠标移动量
+	 * @param  {[type]} offsetY [description]
+	 * @return {[type]}         [description]
+	 */
+	_p.handleMouseMove = function(offsetY){
+		// if(offsetY > 30){
+			// this._module.setIsShow(true);
+		// }
+		var status = this._module.getStatus();
+		if(status == Module.PLAYING){
+			this._render.setTop(offsetY);
+		}
 	}
 	/**
 	 * 游戏中
 	 * @return {[type]} [description]
 	 */
 	_p._game_playing = function(){
+		this._audio.play("count");//声音播放
 		if(this._module.getStatus() == Module.PLAYING ){
 			this._module.addScore();//添加分数
 			this._module.setIsShow(true);
+			this._module.setIsDown(false);
+			//播放声音
 		}
 		if(this._module.getStatus() == Module.START ){
-			this._module.setIsShow(true);	
+			this._module.setIsShow(true);
+			this._module.setIsDown(false);	
 		}
 	}
 	/**

@@ -12,6 +12,7 @@ define(["util/Images","util/Audio"],function(Images,Audio){
 		this._ran_money = [];//随机生成的五张 从上飞下的钱
 		this._time_interval = null;//定时器
 		this._isShow = false;//是否显示
+		this._isDown = false;//是否点下
 		this._shareRect = {
 			x1:0,
 			x2:0,
@@ -167,6 +168,20 @@ define(["util/Images","util/Audio"],function(Images,Audio){
 		return this._isShow;
 	}
 	/**
+	 * 设置鼠标按下
+	 * @param {[type]} flag [description]
+	 */
+	_p.setIsDown = function(flag){
+		this._isDown = flag;
+	}
+	/**
+	 * 鼠标按下
+	 * @return {[type]} [description]
+	 */
+	_p.getIsDown = function(){
+		return this._isDown;
+	}
+	/**
 	 * 分享按钮的位置
 	 * @return {[type]} [description]
 	 */
@@ -179,6 +194,22 @@ define(["util/Images","util/Audio"],function(Images,Audio){
 	 */
 	_p.getRestartRect = function(){
 		return this._restartRect;
+	}
+	/**
+	 * 提示文本
+	 * @return {[type]} [description]
+	 */
+	_p.getText = function(){
+		var score = this._score;
+		if(score < 10000){
+			return "铜指王";
+		}
+		if( score >= 10000 && score < 30000){
+			return "银指王";
+		}
+		if(score >= 30000){
+			return "金指王";
+		}
 	}
 	return Module;
 })
