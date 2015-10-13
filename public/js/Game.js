@@ -86,16 +86,11 @@ define(["Render","Module","util/Audio","util/Images","Resource"],function(Render
 	_p.handleClick = function(x,y){
 		//播放音乐
 		var status = this._module.getStatus();
-		if(status == Module.GAMEOVER){
-			var rectShare = this._module.getShareRect();
-			var rectRestart = this._module.getRestartRect();
-			if(x > rectRestart.x1 && x < rectRestart.x2 && y < rectRestart.y2 && y > rectRestart.y1){
-				//重新开始
-				this._restart_click();//重新开始
-			}
-			if(x > rectShare.x1 && x < rectShare.x2 && y < rectShare.y2 && y > rectShare.y1){
-				//分享
-				this._share_click();
+		if(status == Module.READY){
+			var width = this._canvas.width,height = this._canvas.height;
+			//开始前
+			if(x > 0.3 * width && x < 0.7 * width && y > 0.51 * height && y < 0.585 * height){
+				this._render.showActivityRule();//显示规则
 			}
 		}
 		else if(status == Module.PLAYING){
@@ -161,6 +156,7 @@ define(["Render","Module","util/Audio","util/Images","Resource"],function(Render
 	 * @return {[type]} [description]
 	 */
 	_p._restart_click = function(){
+		document.getElementById("gameOver").style.display = "none";
 		this._module.clearTimeInterval();
 		this._render.clearImgInterval();
 		var imgs = this._module.getImgs();

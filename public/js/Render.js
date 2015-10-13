@@ -42,9 +42,9 @@ define(["Module"],function(Module){
 	_p.renderStart = function(){
 		var ctx = this._ctx;
 		this._renderBg(ctx);//绘制背景
+		this._render_start_bg(ctx);//绘制背景
 		this._render_start_top(ctx);//绘制头部
 		this._render_btm(ctx);//绘制底部钱
-		this._render_starttip(ctx);//绘制向上箭头
 	}
 	/**
 	 * 绘制开始游戏界面
@@ -79,48 +79,18 @@ define(["Module"],function(Module){
 	 * @return {[type]} [description]
 	 */
 	_p.render_game_over = function(ctx){
-		var img = this._imgs.getList()["dlgbg"];
 		var txt = this._module.getText(),score = this._module.getScore();;
-		var scale = this._width / img.width;
-		ctx.save();
-		ctx.translate(0,(this._height - img.height * scale)/2);
-		ctx.drawImage(img,0,0,img.width,img.height,0,0,img.width * scale ,img.height * scale);
-		ctx.fillStyle = "#ffff00";
-		ctx.font = "bold 40px fontawesome";
-		ctx.textAlign = "center";
-		ctx.fillText("￥"+score,this._width/2,img.height * scale * 0.25 * 0.4);//分数
-		ctx.fillText(txt,this._width/2,img.height* scale  * 0.25 * 0.95);//等级
-		ctx.fillStyle = "#DA8F2C";
-		ctx.font="30px fontawesome";
-		ctx.textAlign = "center"
-		ctx.fillText("我数了"+score+",",this._width/2,img.height * scale* 0.75 * 0.58);
-		ctx.fillText("比"+ Math.floor(score / 43000 * 100)+"%的人有钱,",this._width/2,img.height* scale * 0.75 * 0.73);
-		ctx.fillText("我是"+txt,this._width/2,img.height* scale  * 0.75 * 0.88);
-		ctx.translate(0,img.height * scale * 0.75);
-		this.render_btns(ctx,img.height,scale,img.height * scale * 0.75 + (this._height - img.height * scale)/2);
-		ctx.restore();
+		var gameover = document.getElementById("gameOver");
+		var scoreDom = document.getElementById("score");
+		var scoreTxt = document.getElementById("scoreTxt");
+		var overTxt = document.getElementById("overTxt");
+		if(gameover.style.display == "block"){return;}
+		gameover.style.display = "block";
+		scoreDom.textContent = "￥" + score;
+		scoreTxt.textContent = txt;
+		overTxt.innerHTML = "我数了" + score + "<br/>" + "比"+ Math.floor(score / 43000 * 100)+"%的人有钱" +"<br/>" + "我是"+txt;
 	}
-	/**
-	 * 重玩和分享
-	 * @param  {[type]} ctx [description]
-	 * @return {[type]}     [description]
-	 */
-	_p.render_btns = function(ctx,bgHeight,bgScale,y){
-		var btnRestart = this._imgs.getList()["start"],restartScale = bgHeight * bgScale * 0.2 / btnRestart.height;
-		var btnShare = this._imgs.getList()["share"],shareScale = bgHeight * bgScale * 0.2 / btnShare.height;
-		ctx.drawImage(btnRestart,0,0,btnRestart.width,btnRestart.height,(this._width - btnRestart.width*restartScale * 2)/3,0,btnRestart.width*restartScale,btnRestart.height*restartScale);
-		ctx.drawImage(btnShare,0,0,btnShare.width,btnShare.height,(this._width - btnRestart.width*restartScale * 2)/3 * 2 + btnRestart.width *restartScale,0,btnShare.width*shareScale,btnShare.height * shareScale);
-		var rect1 = this._module.getShareRect();
-		rect1.x1 = (this._width - btnRestart.width*restartScale * 2)/3 * 2 + btnRestart.width *restartScale
-		rect1.x2 = rect1.x1 + btnShare.width * shareScale;
-		rect1.y1 = y;
-		rect1.y2 = y + btnShare.height * shareScale;
-		var rect2 = this._module.getRestartRect();
-		rect2.x1 = (this._width - btnRestart.width*restartScale * 2)/3;
-		rect2.x2 = rect2.x1 + btnRestart.width * restartScale;
-		rect2.y1 = y;
-		rect2.y2 = y+btnRestart.height * restartScale;
-	}
+	
 	/**
 	 * 绘制游戏内容
 	 * @param  {[type]} that [description]
@@ -134,6 +104,7 @@ define(["Module"],function(Module){
 		that._render_time_score_bg(ctx);//背景
 		that._render_time_speed(ctx);//时间 速度
 		that._render_score(ctx);//分数
+		that._render_logo(ctx);//logo
 		if(that._module.getStatus() != Module.PLAYING && that._module.getStatus() != Module.GAMEOVER ){
 			that._render_starttip(ctx);//
 		} 
@@ -166,7 +137,7 @@ define(["Module"],function(Module){
 	 */
 	_p._renderBg = function(ctx){
 		ctx.save();
-		ctx.fillStyle = "#559966";//背景颜色
+		ctx.fillStyle = "#04baa3";//背景颜色
 		ctx.fillRect(0,0,this._width,this._height);//绘制背景色
 		ctx.restore();
 	}
@@ -175,9 +146,19 @@ define(["Module"],function(Module){
 	 * @return {[type]} [description]
 	 */
 	_p._render_start_top = function(ctx){
-		var top = this._imgs.getList()["splashtitle"];
-		var scale = this._width * 0.8 / top.width;
-		ctx.drawImage(top,0,0,top.width,top.height,this._width * 0.2 * 0.5,top.height * scale * 0.3,top.width * scale,top.height * scale);;
+		var logo = this._imgs.getList()["logo"];
+		var scale = this._width * 0.33 / logo.width;
+		ctx.drawImage(logo,0,0,logo.width,logo.height,this._width * 0.67 * 0.5,this._height * 0.03,logo.width * scale,logo.height * scale);
+	}
+	/**
+	 * 绘制中间内部内容
+	 * @param  {[type]} ctx [description]
+	 * @return {[type]}     [description]
+	 */
+	_p._render_start_bg = function(ctx){
+		var startBg = this._imgs.getList()["start_bg"];
+		var scale = this._width / startBg.width;
+		ctx.drawImage(startBg,0,0,startBg.width,startBg.height,0,0,this._width,this._height);
 	}
 	/**
 	 * 绘制中间向上箭头
@@ -185,13 +166,8 @@ define(["Module"],function(Module){
 	 */
 	_p._render_starttip = function(ctx){
 		var img = this._imgs.getList()["starttip"];
-		var scale = this._width * 0.4 / img.width;
-		var x = (this._width - img.width * scale) / 2,y = this._height * 0.7 - img.height * scale * 0.35;
-		if(this._module.getStatus() == Module.PLAYING || this._module.getStatus() == Module.START){
-			scale = this._width * 0.4 / img.width;
-			y = this._height * 0.36 - img.height * scale * 0.35;
-			x = (this._width - img.width * scale) / 2
-		}
+		var scale = this._width * 0.55 / img.width;
+		var x = (this._width - img.width * scale) / 2,y = this._height * 0.32;
 		ctx.drawImage(img,0,0,img.width,img.height,x,y,img.width * scale,img.height * scale);
 	}
 	/**
@@ -202,10 +178,10 @@ define(["Module"],function(Module){
 		var img = this._imgs.getList()["mb0"];
 		var scale = this._width * 0.6 / img.width;
 		if(this._module.getStatus() == Module.PLAYING || this._module.getStatus() == Module.START){
-			ctx.drawImage(img,0,0,img.width,img.height,(this._width - img.width * scale )/2,this._height * 0.36,img.width * scale,img.height * scale )
-		}
+			ctx.drawImage(img,0,0,img.width,img.height,(this._width - img.width * scale )/2,this._height * 0.40,img.width * scale,img.height * scale )
+		}	
 		else{
-			ctx.drawImage(img,0,0,img.width,img.height/2,(this._width - img.width * scale )/2,this._height * 0.7,img.width * scale,img.height * 0.5 * scale )
+			ctx.drawImage(img,0,0,img.width,img.height,(this._width - img.width * scale )/2,this._height * 0.64,img.width * scale,img.height  * scale )
 		}
 	}
 	/**
@@ -215,8 +191,8 @@ define(["Module"],function(Module){
 	 */
 	_p._render_time_score_bg = function(ctx){
 		var img = this._imgs.getList()["tmbg"];
-		var x = this._width * 0.1 / 2,y = this._height * 0.04; 
-		ctx.drawImage(img,0,0,img.width,img.height,x,y,this._width * 0.9,this._height * 0.23);
+		var x = this._width * 0.26 / 2,y = this._height * 0.06; 
+		ctx.drawImage(img,0,0,img.width,img.height,x,y,this._width * 0.74,this._height * 0.24);
 	}
 	/**
 	 * 绘制分数
@@ -226,7 +202,7 @@ define(["Module"],function(Module){
 	_p._render_score = function(ctx){
 		var score = this._module.getScore();
 		ctx.save();
-		ctx.fillStyle = "#ffff00";
+		ctx.fillStyle = "#05baa3";
 		ctx.font = "bold 40px arial";
 		ctx.textAlign = "center";
 		ctx.fillText("￥"+score,this._width/2,this._height * 0.14);
@@ -243,13 +219,13 @@ define(["Module"],function(Module){
 		speed = speed <= 0 ? 0 : speed;
 		ctx.save();
 		var timeImg = this._imgs.getList()["tmicon"];
-		var scale =20 / timeImg.width;
-		ctx.drawImage(timeImg,0,0,timeImg.width,timeImg.height,this._width * 0.15,this._height * 0.24 - timeImg.height * scale * 0.9,timeImg.width * scale,timeImg.height * scale);
-		ctx.fillStyle = "#fff";
+		var scale =25 / timeImg.width;
+		ctx.drawImage(timeImg,0,0,timeImg.width,timeImg.height,this._width * 0.15,this._height * 0.27 - timeImg.height * scale * 0.9,timeImg.width * scale,timeImg.height * scale);
+		ctx.fillStyle = "#77d800";
 		ctx.font = "bold 20px arial";
 		ctx.textAlign = "right";
-		ctx.fillText(time + "\"",this._width * 0.15+ timeImg.width * 1.2,this._height * 0.24);
-		ctx.fillText("￥" + speed + "/秒",this._width * 0.95 - timeImg.width * 1,this._height * 0.24);
+		ctx.fillText(time + "\"",this._width * 0.17+ timeImg.width * 1.2,this._height * 0.265);
+		ctx.fillText("￥" + speed + "/秒",this._width * 0.95 - timeImg.width * 1,this._height * 0.265);
 		ctx.restore();
 	}
 	/**
@@ -270,6 +246,26 @@ define(["Module"],function(Module){
 			ctx.translate(-rans[i].x + img.width / 2,-rans[i].y + img.height/2);
 			rans[i].y += rans[i].vy;
 			ctx.restore();
+		}
+	}
+	/**
+	 * 绘制logo
+	 * @param  {[type]} ctx [description]
+	 * @return {[type]}     [description]
+	 */
+	_p._render_logo = function(ctx){
+		var logo = this._imgs.getList()["logo"];
+		var scale = this._width * 0.18 / logo.width;
+		ctx.drawImage(logo,0,0,logo.width,logo.height,this._width - logo.width * scale * 1.3,0,logo.width * scale,logo.height * scale);
+	}
+	/**
+	 * 显示规则
+	 * @return {[type]} [description]
+	 */
+	_p.showActivityRule = function(){
+		var hide = document.getElementsByClassName("hide");
+		for(var i = 0;i< hide.length ; i++){
+			hide[i].style.display = "block";
 		}
 	}
 	/**

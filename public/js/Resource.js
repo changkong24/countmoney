@@ -14,26 +14,14 @@ define([],function(){
 			name:"tmbg",
 			src:"tmbg.png",
 		},{
-			name:"main",
-			src:"main.jpg"
-		},{
 			name:"d0",
 			src:"d0.png"
-		},{
-			name:"dlgbg",
-			src:"dlgbg.png"
-		},{
-			name:"follow_anim",
-			src:"follow_anim.png"
 		},{
 			name:"m0",
 			src:"m0.png"
 		},{
 			name:"mb0",
 			src:"mb0.png"
-		},{
-			name:"rank",
-			src:"rank.png"
 		},{
 			name:"share",
 			src:"share.png"
@@ -52,6 +40,12 @@ define([],function(){
 		},{
 			name:"tmicon",
 			src:"tmicon1.png"
+		},{
+			name:"logo",
+			src:"logo.png"
+		},{
+			name:"start_bg",
+			src:"start_bg.png"
 		}
 	]
 	Resource.SOUNDPATH = "../audio/";
