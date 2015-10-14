@@ -80,12 +80,14 @@ define(["Module"],function(Module){
 	 */
 	_p.render_game_over = function(ctx){
 		var txt = this._module.getText(),score = this._module.getScore();;
+		var cover = document.getElementById("cover");
 		var gameover = document.getElementById("gameOver");
 		var scoreDom = document.getElementById("score");
 		var scoreTxt = document.getElementById("scoreTxt");
 		var overTxt = document.getElementById("overTxt");
 		if(gameover.style.display == "block"){return;}
 		gameover.style.display = "block";
+		cover.style.display = "block";
 		scoreDom.textContent = "￥" + score;
 		scoreTxt.textContent = txt;
 		overTxt.innerHTML = "我数了" + score + "<br/>" + "比"+ Math.floor(score / 43000 * 100)+"%的人有钱" +"<br/>" + "我是"+txt;

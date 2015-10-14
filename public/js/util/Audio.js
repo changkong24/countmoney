@@ -14,6 +14,7 @@ define(["Resource"],function(Resource){
 	 */
 	_p.play = function(id){
 		if(this._list[id] && !this._mute) {
+			this._list[id].pause();
 			this._list[id].play();
 		}
 	}

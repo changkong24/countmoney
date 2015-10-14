@@ -157,6 +157,7 @@ define(["Render","Module","util/Audio","util/Images","Resource"],function(Render
 	 */
 	_p._restart_click = function(){
 		document.getElementById("gameOver").style.display = "none";
+		document.getElementById("cover").style.display = "none";
 		this._module.clearTimeInterval();
 		this._render.clearImgInterval();
 		var imgs = this._module.getImgs();

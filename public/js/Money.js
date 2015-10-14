@@ -141,18 +141,25 @@ define(["Game"],function(Game){
 	 */
 	_p._share_handle = function(){
 		var share = document.getElementById("share");
+		var shareNotice = document.getElementById("shareNotice");
 		var that = this;
 		if(isTouchDevice){		
 			share.addEventListener("touchend",function(e){
-				console.log("share");
+				shareNotice.style.display = "block";
+				setTimeout(function(){
+					shareNotice.style.display = "none";
+				},1000)
 			})
 		}
 		else{
 			share.addEventListener("click",function(e){
-				console.log("share");
+				shareNotice.style.display = "block";
+				setTimeout(function(){
+					shareNotice.style.display = "none";
+				},1000)
 			})
 		}
-	}	
+	}
 	/**
 	 * 领取1000元
 	 * @return {[type]} [description]
